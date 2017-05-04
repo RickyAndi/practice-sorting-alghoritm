@@ -1,3 +1,4 @@
-#List of completed sorting alghoritm
+# List of completed sorting alghoritm
 - Quick Sort
+- Bubble Sort
 
