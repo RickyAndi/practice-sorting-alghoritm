@@ -3,7 +3,7 @@ const { expect } = require('chai');
 
 describe('Bubble Sort Module', () => {
   describe('getTwoIndexesToBeSwapped function', () => {
-    describe('can get array with two number, which are index and index + 1', () => {
+    describe('can get array with two number, which are index (which is the provided argument) and index + 1', () => {
       it('test 1 : with input 0, will get [0,1]', () => {
         const index = 0;
         const expectedArray = [0,1];
