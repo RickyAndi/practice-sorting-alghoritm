@@ -6,7 +6,7 @@ function getTwoIndexesToBeSwapped(index) {
   return [index, index + 1];
 }
 
-function bubbleSort(array, currentIndex = 0, indexLimit = (array.length - 1)) {
+function recursiveBubbleSort(array, currentIndex = 0, indexLimit = (array.length - 1)) {
   if(isEqual(indexLimit, 0)) {
     return array;
   }
@@ -14,24 +14,27 @@ function bubbleSort(array, currentIndex = 0, indexLimit = (array.length - 1)) {
   if(isEqual(currentIndex, indexLimit)) {
     const nextIndexLimit = indexLimit - 1;
     const firstIndex = 0;
-    return bubbleSort(array, firstIndex, nextIndexLimit)
+    return recursiveBubbleSort(array, firstIndex, nextIndexLimit)
   }
 
-  const indexesToSwap = getTwoIndexesToBeSwapped(currentIndex);
-  const lowerIndexValue = array[indexesToSwap[0]];
-  const higherIndexValue = array[indexesToSwap[1]];
-  
+  const indexesToBeSwapped = getTwoIndexesToBeSwapped(currentIndex);
+  const lowerIndexValue = array[indexesToBeSwapped[0]];
+  const higherIndexValue = array[indexesToBeSwapped[1]];
   const nextIndex = currentIndex + 1;
   
   if(isHigherThan(lowerIndexValue, higherIndexValue)) {
-    let swappedElementArray = swapElementInArray(array, indexesToSwap[1], indexesToSwap[0]);
-    return bubbleSort(swappedElementArray, nextIndex, indexLimit);
+    let swappedElementArray = swapElementInArray(array, indexesToBeSwapped[1], indexesToBeSwapped[0]);
+    return recursiveBubbleSort(swappedElementArray, nextIndex, indexLimit);
   } 
 
-  return bubbleSort(array, nextIndex, indexLimit);
+  return recursiveBubbleSort(array, nextIndex, indexLimit);
+}
+
+function loopBubbleSort() {
+
 }
 
 module.exports = {
   getTwoIndexesToBeSwapped,
-  bubbleSort
+  bubbleSort : recursiveBubbleSort,
 }
