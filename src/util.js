@@ -34,9 +34,19 @@ function not(boolean) {
   return !boolean;
 }
 
+function getTwoIndexesToBeSwapped(index) {
+  return [index, index + 1];
+}
+
+function getTwoIndexesToBeSwappedInBackWard(index) {
+  return [index, index - 1];
+}
+
 module.exports = {
   isNull,
   isEven,
   isOdd,
-  not
+  not,
+  getTwoIndexesToBeSwapped,
+  getTwoIndexesToBeSwappedInBackWard
 };
