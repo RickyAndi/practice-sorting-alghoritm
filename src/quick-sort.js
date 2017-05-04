@@ -3,30 +3,30 @@ const { isEqual, isHigherEqualThan, isLowerEqualThan, isHigherThan, isLowerThan 
 const swapElementInArray = require('./swap-element-in-array');
 const debug = require('debug')('partition');
 
-function getToBeSwappedIndex(getNextIndex, compare, array, index, pivotIndex) {
-  if(index === pivotIndex) {
+function getToBeSwappedIndex(getNextIndex, comparingFunction, array, index, pivotIndex) {
+  if(isEqual(index, pivotIndex)) {
     return index;
   }
   
-  if(compare(array[index], array[pivotIndex])) {
+  if(comparingFunction(array[index], array[pivotIndex])) {
     return index;
   }
 
   const nextIndex = getNextIndex(index);
-  return getToBeSwappedIndex(getNextIndex, compare, array, nextIndex, pivotIndex);
+  return getToBeSwappedIndex(getNextIndex, comparingFunction, array, nextIndex, pivotIndex);
 }
 
 const getStartIndexToBeSwapped = getToBeSwappedIndex.bind(null, 
   index => index + 1, 
   (indexValue, pivotValue) => {
-    return indexValue >= pivotValue
+    return isHigherEqualThan(indexValue, pivotValue);
   }
 );
 
 const getEndIndexToBeSwapped = getToBeSwappedIndex.bind(null, 
   index => index - 1, 
   (indexValue, pivotValue) => {
-    return indexValue <= pivotValue
+    return isLowerEqualThan(indexValue, pivotValue);
   }
 );
 
@@ -86,28 +86,26 @@ function quickSort(array, pivotIndex = null, startIndex = null, endIndex = null)
     const rightPartitioningResult = quickSort(leftPartitioningResult.partitionedArray, rightPivotIndex, rightStartIndex, endIndex);
 
     return rightPartitioningResult.partitionedArray;
-
-  } else {
-    
-    if((isEqual(pivotIndex, startIndex) && isEqual(pivotIndex, endIndex)) || isHigherThan(startIndex, endIndex)) {
-      return {
-        partitionedArray : array,
-        nextPivotIndex : pivotIndex
-      }
+  } 
+  
+  if((isEqual(pivotIndex, startIndex) && isEqual(pivotIndex, endIndex)) || isHigherThan(startIndex, endIndex)) {
+    return {
+      partitionedArray : array,
+      nextPivotIndex : pivotIndex
     }
-      
-    const centerPartitioningResult = partition(array, pivotIndex, startIndex, endIndex);
-    
-    const leftEndIndex = (centerPartitioningResult.nextPivotIndex - 1);
-    const leftPivotIndex = getPivotIndex(startIndex, leftEndIndex);
-    const leftPartitioningResult = quickSort(centerPartitioningResult.partitionedArray, leftPivotIndex, startIndex, leftEndIndex);
-    
-    const rightStartIndex = (centerPartitioningResult.nextPivotIndex + 1);
-    const rightPivotIndex = getPivotIndex(rightStartIndex, endIndex);
-    const rightPartitioningResult = quickSort(leftPartitioningResult.partitionedArray, rightPivotIndex, rightStartIndex, endIndex);
-    
-    return rightPartitioningResult;
   }
+    
+  const centerPartitioningResult = partition(array, pivotIndex, startIndex, endIndex);
+  
+  const leftEndIndex = (centerPartitioningResult.nextPivotIndex - 1);
+  const leftPivotIndex = getPivotIndex(startIndex, leftEndIndex);
+  const leftPartitioningResult = quickSort(centerPartitioningResult.partitionedArray, leftPivotIndex, startIndex, leftEndIndex);
+  
+  const rightStartIndex = (centerPartitioningResult.nextPivotIndex + 1);
+  const rightPivotIndex = getPivotIndex(rightStartIndex, endIndex);
+  const rightPartitioningResult = quickSort(leftPartitioningResult.partitionedArray, rightPivotIndex, rightStartIndex, endIndex);
+  
+  return rightPartitioningResult;
 }
 
 module.exports = {
